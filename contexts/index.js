@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 const AppContext = createContext();
 
 export function useAppContext() {
@@ -6,7 +6,12 @@ export function useAppContext() {
 }
 
 export function AppContextProvider({ children }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") || "light";
+    }
+  });
+
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [cartList, setCartList] = useState([]);
   const [totalQty, setTotalQty] = useState(0);
@@ -15,6 +20,10 @@ export function AppContextProvider({ children }) {
   const handleToggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const handleCartOpen = () => {
     setIsBackdropOpen(true);

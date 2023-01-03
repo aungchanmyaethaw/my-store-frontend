@@ -5,12 +5,10 @@ import LogoutButton from "../components/LogoutButton";
 import styled from "styled-components";
 
 const Profile = ({ user }) => {
-  console.log(user);
-
   return (
     <Layout>
       <ProfileStyled>
-        <img src={user.picture} />
+        <img src={user.picture} referrerpolicy="no-referrer" />
         <h2>{user.name}</h2>
         <p>{user.email}</p>
         <LogoutButton />

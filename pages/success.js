@@ -23,6 +23,16 @@ const Success = ({ data }) => {
             </p>
           ))}
         </div>
+        <div>
+          <h2>Products</h2>
+          {data.line_items.data.map((item) => (
+            <div key={item.id}>
+              <p>Product: {item.description}</p>
+              <p>Quantity: {item.quantity}</p>
+              <p>Price :{item.price.unit_amount}</p>
+            </div>
+          ))}
+        </div>
         <HomeBtn onClick={() => router.push("/")}>Back to Home</HomeBtn>
       </SuccessContainer>
     </Layout>
@@ -32,7 +42,9 @@ const Success = ({ data }) => {
 export default Success;
 
 export async function getServerSideProps(params) {
-  const res = await stripe.checkout.sessions.retrieve(params.query.session_id);
+  const res = await stripe.checkout.sessions.retrieve(params.query.session_id, {
+    expand: ["line_items"],
+  });
   return {
     props: {
       data: res,

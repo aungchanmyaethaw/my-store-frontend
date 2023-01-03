@@ -3,24 +3,25 @@ import { useRouter } from "next/router";
 import { useQuery } from "urql";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { AiFillMinusCircle } from "react-icons/ai";
+import toast, { Toaster } from "react-hot-toast";
 import styled, { ThemeProvider } from "styled-components";
 import { GET_SINGLE_PRODUCTS } from "../../libs/products";
 import Layout from "../../components/Layout";
 import { currencyFormatter } from "../../utils";
 import { useAppContext } from "../../contexts";
 
-const ProductDetails = () => {
-  const lightTheme = {
-    border: "transparent",
-    buttonBackground: "#222",
-    svgFill: "#222",
-  };
-  const darkTheme = {
-    border: "#fff",
-    buttonBackground: "#222",
-    svgFill: "#ddd",
-  };
+const lightTheme = {
+  border: "transparent",
+  buttonBackground: "#222",
+  svgFill: "#222",
+};
+const darkTheme = {
+  border: "#fff",
+  buttonBackground: "#222",
+  svgFill: "#ddd",
+};
 
+const ProductDetails = () => {
   const { query } = useRouter();
   const [result] = useQuery({
     query: GET_SINGLE_PRODUCTS,
@@ -45,6 +46,7 @@ const ProductDetails = () => {
   const handleSubmit = (product, qty) => {
     setQty(1);
     handleAddToCart(product, qty);
+    toast.success(`${product.title} is added to the cart.`, { duration: 1500 });
   };
 
   if (fetching) {
@@ -63,6 +65,7 @@ const ProductDetails = () => {
   return (
     <Layout>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+        <Toaster position="top-left" />
         <ProductDetailsContainer>
           <ProductDetailsImageWrapper>
             <img src={url} />

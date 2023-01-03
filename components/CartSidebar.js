@@ -1,11 +1,22 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { BsFillCartFill } from "react-icons/bs";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppContext } from "../contexts";
 import { currencyFormatter } from "../utils";
 import connectStripe from "../libs/connectStripe";
+
+const lightTheme = {
+  backgroundColor: "#fff",
+  svgFill: "#222",
+  fontColor: "#222",
+};
+const darkTheme = {
+  backgroundColor: "#222",
+  svgFill: "#ddd",
+  fontColor: "#f1f1f1",
+};
 
 const CartSidebar = () => {
   const {
@@ -14,6 +25,7 @@ const CartSidebar = () => {
     handleAddQty,
     handleSubtractQty,
     totalPrice,
+    theme,
   } = useAppContext();
 
   const handlePurchase = async () => {
@@ -51,7 +63,7 @@ const CartSidebar = () => {
               </EmptyCartStyled>
             </AnimatePresence>
           ) : (
-            <>
+            <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
               <CartListStyled>
                 <AnimatePresence>
                   {cartList.map((product) => (
@@ -102,7 +114,7 @@ const CartSidebar = () => {
                   </motion.div>
                 </AnimatePresence>
               </CartListStyled>
-            </>
+            </ThemeProvider>
           )}
         </CartSidebarStyled>
       )}
@@ -163,7 +175,7 @@ const CartListStyled = styled(motion.ul)`
     margin-bottom: 1em;
     display: flex;
     column-gap: 1em;
-    background-color: #fff;
+    background-color: ${(props) => props.theme.backgroundColor};
     border-radius: 8px;
 
     & > div {
@@ -176,6 +188,7 @@ const CartListStyled = styled(motion.ul)`
 
       h3 {
         font-weight: 700;
+        color: ${(props) => props.theme.fontColor};
       }
     }
   }
@@ -186,6 +199,11 @@ const ProductControls = styled.div`
     display: flex;
     align-items: center;
     gap: 0.5em;
+
+    span {
+      color: ${(props) => props.theme.fontColor};
+    }
+
     button {
       width: 1.5rem;
       height: 1.5em;
@@ -198,6 +216,7 @@ const ProductControls = styled.div`
       svg {
         width: 100%;
         height: 100%;
+        fill: ${(props) => props.theme.svgFill};
       }
 
       &:hover,
