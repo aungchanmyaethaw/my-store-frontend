@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { AiFillShopping } from "react-icons/ai";
 import styled from "styled-components";
@@ -10,21 +10,14 @@ const Navbar = () => {
   const { handleCartOpen, totalQty, handleToggleTheme, theme } =
     useAppContext();
 
-  const [isOn, setIsOn] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "light";
-    }
-  });
-
-  useEffect(() => {
-    setIsOn(theme);
-  }, [theme]);
-
   return (
     <NavbarStyled>
       <Link href="/">My Store</Link>
       <div>
-        <ToggleBtn onClick={handleToggleTheme} data-ison={isOn === "dark"}>
+        <ToggleBtn
+          onClick={handleToggleTheme}
+          className={theme === "dark" ? "active" : null}
+        >
           <motion.span layout transition={{ type: "spring", duration: 0.5 }} />
         </ToggleBtn>
         <UserMenuItem />
@@ -90,7 +83,7 @@ const ToggleBtn = styled(motion.div)`
 
   cursor: pointer;
 
-  &[data-ison="true"] {
+  &.active {
     justify-content: flex-end;
   }
   & > span {

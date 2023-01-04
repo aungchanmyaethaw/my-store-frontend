@@ -6,11 +6,7 @@ export function useAppContext() {
 }
 
 export function AppContextProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "light";
-    }
-  });
+  const [theme, setTheme] = useState("");
 
   const [isBackdropOpen, setIsBackdropOpen] = useState(false);
   const [cartList, setCartList] = useState([]);
@@ -18,12 +14,19 @@ export function AppContextProvider({ children }) {
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleToggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    localStorage.setItem("theme", newTheme);
   };
 
   useEffect(() => {
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    const tempTheme = localStorage.getItem("theme");
+    if (tempTheme === null) {
+      setTheme("light");
+    } else {
+      setTheme(tempTheme);
+    }
+  }, []);
 
   const handleCartOpen = () => {
     setIsBackdropOpen(true);
